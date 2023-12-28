@@ -50,7 +50,7 @@ async def media_query(bot: BOT, message: Message | Msg):
     overflow = check_overflow(message=message)
     if overflow:
         return
-    prompt = "Analyze the given file(s)" if message.document else "What is this?"
+    prompt = "Analyze the given file(s)" if message.document else "Analyze the given image(s)"
     input = message.caption or prompt
     down_resp = await message.reply("Downloading...")
     media: list | None = await get_media_list(message)
