@@ -26,7 +26,7 @@ async def restart(bot: BOT, message: Message, u_resp: Message | None = None) -> 
     Usage:
         .restart | .restart -h
     """
-    reply: Message = u_resp or await message.reply("restarting....")
+    reply: Message = u_resp or await message.reply("Restarting....")
     if reply.chat.type in (ChatType.GROUP, ChatType.SUPERGROUP):
         os.environ["RESTART_MSG"] = str(reply.id)
         os.environ["RESTART_CHAT"] = str(reply.chat.id)

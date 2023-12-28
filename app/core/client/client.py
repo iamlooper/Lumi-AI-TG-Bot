@@ -31,7 +31,7 @@ def import_modules():
 class BOT(Client):
     def __init__(self):
         super().__init__(
-            name="bot",
+            name=Config.BOT_NAME,
             api_id=int(os.environ.get("API_ID")),
             api_hash=os.environ.get("API_HASH"),
             bot_token=os.environ.get("BOT_TOKEN"),
@@ -112,13 +112,13 @@ class BOT(Client):
                 f"\n<b>Traceback:</b>"
                 f"\n<code>{traceback}</code>"
             )
-        return await self.send_message(
+        return (await self.send_message(
             chat_id=Config.LOG_CHAT,
             text=text,
             name=name,
             disable_web_page_preview=disable_web_page_preview,
             parse_mode=parse_mode,
-        )
+        ))  # fmt:skip
 
     async def restart(self, hard=False) -> None:
         await aiohttp_tools.init_task()
@@ -126,7 +126,7 @@ class BOT(Client):
         if hard:
             os.remove("logs/app_logs.txt")
             os.execl("/bin/bash", "/bin/bash", "run")
-        LOGGER.info("Restarting......")
+        LOGGER.info("Restarting...")
         os.execl(sys.executable, sys.executable, "-m", "app")
 
     async def send_message(

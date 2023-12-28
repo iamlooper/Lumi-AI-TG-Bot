@@ -18,10 +18,31 @@ class MediaType(Enum):
 
 
 class MediaExts:
-    PHOTO = {".png", ".jpg", ".jpeg", ".heic", ".webp"}
+    PHOTO = {".png", ".jpg", ".jpeg"}
     VIDEO = {".mp4", ".mkv", ".webm"}
     GIF = {".gif"}
     AUDIO = {".aac", ".mp3", ".opus", ".m4a", ".ogg", ".flac"}
+    TEXT = {
+        ".txt",
+        ".json",
+        ".xml",
+        ".html",
+        ".css",
+        ".md",
+        ".log",
+        ".ini",
+        ".conf",
+        ".sh",
+        ".py",
+        ".js",
+        ".java",
+        ".kt",
+        ".c",
+        ".cpp",
+        ".h",
+        ".hpp",
+    }
+    DOCUMENT = {".pdf", ".docx", ".xlsx"}
 
 
 def bytes_to_mb(size: int):

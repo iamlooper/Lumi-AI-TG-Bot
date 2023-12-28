@@ -17,6 +17,8 @@ class Message(Msg):
 
     @cached_property
     def cmd(self) -> str | None:
+        if not self.text_list:
+            return
         raw_cmd = self.text_list[0]
         cmd = raw_cmd[1:]
         return cmd if cmd in Config.CMD_DICT else None
@@ -42,7 +44,7 @@ class Message(Msg):
     @cached_property
     def replied(self) -> "Message":
         if self.reply_to_message:
-            return Message.parse_message(self.reply_to_message)
+            return (Message.parse_message(self.reply_to_message))  # fmt:skip
 
     @cached_property
     def reply_id(self) -> int | None:
@@ -58,7 +60,9 @@ class Message(Msg):
 
     @cached_property
     def text_list(self) -> list:
-        return self.text.split()
+        if self.text:
+            return self.text.split()
+        return []
 
     @cached_property
     def trigger(self):

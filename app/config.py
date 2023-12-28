@@ -16,6 +16,8 @@ class _Config:
 
         self.API_TOKEN = os.environ.get("VIC_API_TOKEN")
 
+        self.BOT_NAME: str = os.environ.get("BOT_NAME")
+
         self.CMD_DICT: dict[str, _Config.CMD] = {}
 
         self.DEV_MODE: int = int(os.environ.get("DEV_MODE", 0))

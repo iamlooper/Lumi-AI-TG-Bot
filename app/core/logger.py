@@ -1,9 +1,11 @@
 import os
 from logging import INFO, WARNING, StreamHandler, basicConfig, getLogger, handlers
 
+from app import Config
+
 os.makedirs("logs", exist_ok=True)
 
-LOGGER = getLogger("VIC-BOT")
+LOGGER = getLogger(Config.BOT_NAME)
 
 basicConfig(
     level=INFO,
