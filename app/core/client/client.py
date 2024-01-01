@@ -35,7 +35,7 @@ class BOT(Client):
             api_id=int(os.environ.get("API_ID")),
             api_hash=os.environ.get("API_HASH"),
             bot_token=os.environ.get("BOT_TOKEN"),
-            in_memory=True,
+            # in_memory=True,
             parse_mode=ParseMode.DEFAULT,
             sleep_threshold=30,
             max_concurrent_transmissions=2,

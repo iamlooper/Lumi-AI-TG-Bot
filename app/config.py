@@ -2,6 +2,7 @@ import json
 import os
 
 from git import Repo
+from pyrogram.types import Message
 
 
 class _Config:
@@ -18,9 +19,17 @@ class _Config:
 
         self.BOT_NAME: str = os.environ.get("BOT_NAME")
 
+        self.CHATS: dict[str, list[int]] = {"PRIVATE": [], "GROUPS": []}
+
         self.CMD_DICT: dict[str, _Config.CMD] = {}
 
+        self.CONVO_DICT: dict[str, list[dict[str, str]]] = {}
+
+        self.CACHED_MEDIA_GROUPS: dict[str, list[Message]] = {}
+
         self.DEV_MODE: int = int(os.environ.get("DEV_MODE", 0))
+
+        self.DB_ID: int = int(os.environ.get("DB_ID", 0))
 
         self.INIT_TASKS: list = []
 

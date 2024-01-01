@@ -4,6 +4,8 @@ from pyrogram.types import Message
 from app import Config
 from app.core.client.conversation import Conversation
 
+# Overall BOT filters
+
 convo_filter = _filters.create(
     lambda _, __, message: (message.chat.id in Conversation.CONVO_DICT.keys())
     and (not message.reactions)

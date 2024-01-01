@@ -1,20 +1,11 @@
 import asyncio
 import traceback
 
+from pyrogram import filters
 from pyrogram.types import Message as Msg
 
-from app import BOT, Config, bot
-from app.core import Message, filters
-
-
-@bot.on_message(filters.users_filter, group=1)
-@bot.on_edited_message(filters.users_filter, group=1)
-async def cmd_dispatcher(bot: BOT, message: Message) -> None:
-    message = Message.parse_message(message)
-    func = Config.CMD_DICT[message.cmd].func
-    coro = func(bot, message)
-    await run_coro(coro, message)
-    message.stop_propagation()
+from app import BOT, Config, Message, bot
+from app.core.client import filters
 
 
 @bot.on_message(filters.convo_filter, group=0)
@@ -26,6 +17,16 @@ async def convo_handler(bot: BOT, message: Msg):
     conv_obj.responses.append(message)
     conv_obj.response.set_result(message)
     message.continue_propagation()
+
+
+@bot.on_message(filters.users_filter, group=0)
+@bot.on_edited_message(filters.users_filter, group=0)
+async def cmd_dispatcher(bot: BOT, message: Message) -> None:
+    message = Message.parse_message(message)
+    func = Config.CMD_DICT[message.cmd].func
+    coro = func(bot, message)
+    await run_coro(coro, message)
+    message.stop_propagation()
 
 
 async def run_coro(coro, message) -> None | int:

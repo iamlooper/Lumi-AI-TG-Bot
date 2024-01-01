@@ -1,0 +1,53 @@
+import json
+import os
+
+from pyrogram import filters
+from pyrogram.enums import ChatType
+from pyrogram.types import Message as Msg
+
+from app import BOT, Config, Message, bot
+from app.plugins.VIC.helper import check_overflow, send_response
+
+
+def chat_convo_check(filters, client, message: Message, media: bool = False) -> bool:
+    if (
+        (not message.text if not media else not message.media)
+        or message.chat.type not in {ChatType.GROUP, ChatType.SUPERGROUP}
+        or not message.reply_to_message
+        or not message.reply_to_message.from_user
+        or message.reply_to_message.from_user.id != client.me.id
+        or f"{message.chat.id}-{message.from_user.id}" not in Config.CONVO_DICT
+    ):
+        return False
+    return True
+
+
+def private_convo_check(filters, client, message: Message, media: bool = False) -> bool:
+    if (
+        (not message.text if not media else not message.media)
+        or not message.chat.type == ChatType.PRIVATE
+        or f"{message.chat.id}-{message.from_user.id}" not in Config.CONVO_DICT
+    ):
+        return False
+    return True
+
+
+vic_text_chat_filter = filters.create(chat_convo_check) | filters.create(
+    private_convo_check
+)
+
+
+@bot.on_message(vic_text_chat_filter, group=2)
+async def text_query(bot: BOT, message: Message | Msg):
+    if not isinstance(message, Message):
+        message = Message.parse_message(message)
+        input = message.text
+    else:
+        input = message.input
+    overflow = check_overflow(message=message)
+    if overflow:
+        return
+    url = os.path.join(Config.API, "chat")
+    history = Config.CONVO_DICT.get(message.unique_chat_user_id, [])
+    data = json.dumps({"prompt": input, "history": history})
+    await send_response(message=message, url=url, data=data)
