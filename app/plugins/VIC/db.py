@@ -38,6 +38,8 @@ async def new_chat(bot: BOT, message: Msg):
     else:
         Config.CHATS["GROUPS"].append(chat_id)
     await bot.edit_message_text(
-        chat_id=Config.LOG_CHANNEL, message_id=Config.DB_ID, text=json.dumps(Config.CHATS)
+        chat_id=Config.LOG_CHANNEL,
+        message_id=Config.DB_ID,
+        text=json.dumps(Config.CHATS),
     )
     message.continue_propagation()

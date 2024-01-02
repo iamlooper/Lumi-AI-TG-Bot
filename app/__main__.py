@@ -1,6 +1,7 @@
 import os
-from app import LOGGER
 import traceback
+
+from app import LOGGER
 
 if __name__ == "__main__":
     from app import bot

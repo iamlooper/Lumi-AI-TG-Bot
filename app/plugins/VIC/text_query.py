@@ -10,8 +10,9 @@ from app.plugins.VIC.helper import check_overflow, send_response
 
 
 def chat_convo_check(filters, client, message: Message, media: bool = False) -> bool:
+    contains_media = message.photo or message.document
     if (
-        (not message.text if not media else not message.media)
+        (not message.text if not media else not contains_media)
         or message.chat.type not in {ChatType.GROUP, ChatType.SUPERGROUP}
         or not message.reply_to_message
         or not message.reply_to_message.from_user
@@ -23,8 +24,9 @@ def chat_convo_check(filters, client, message: Message, media: bool = False) -> 
 
 
 def private_convo_check(filters, client, message: Message, media: bool = False) -> bool:
+    contains_media = message.photo or message.document
     if (
-        (not message.text if not media else not message.media)
+        (not message.text if not media else not contains_media)
         or not message.chat.type == ChatType.PRIVATE
         or f"{message.chat.id}-{message.from_user.id}" not in Config.CONVO_DICT
     ):
