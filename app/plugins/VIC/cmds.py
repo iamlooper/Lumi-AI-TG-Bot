@@ -6,9 +6,20 @@ from pyrogram.types import Message as Msg
 from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
+@bot.on_message(filters.command(commands="start", prefixes="/"), group=1)
+async def start_bot(bot: BOT, message: Msg):
+    await message.reply("""Hello. I am VIC, a Versatile Intelligent Chatbot created by a developer named Looper. I am designed to be a friendly and helpful assistant, capable of understanding and communicating fluently with users like you.
+
+**Usage:**
+- /ask Hello! (starts a new conversation, but clears the previous chat and starts a new conversation if the previous chat exists.)
+- /clear (clears chat history.)
+
+**Continued Conversation:**
+- In a public chat, simply reply to VIC's response to continue the conversation.
+- In a private chat, you do not need to reply to VIC's response to continue the conversation.""")
 
 @bot.on_message(filters.command(commands="ask", prefixes="/"), group=1)
-async def start_query(bot: BOT, message: Msg):
+async def ask_query(bot: BOT, message: Msg):
     message = Message.parse_message(message)
     input = message.input
     if not input:
@@ -27,7 +38,7 @@ async def clear_history(bot: BOT, message: Msg):
     message = Message.parse_message(message)
     history = Config.CONVO_DICT.pop(message.unique_chat_user_id, None)
     if history:
-        await message.reply("History Cleared!")
+        await message.reply("Chat history cleared!")
     message.stop_propagation()
 
 

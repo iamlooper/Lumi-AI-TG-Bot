@@ -33,6 +33,8 @@ class _Config:
 
         self.INIT_TASKS: list = []
 
+        self.LOG_CHANNEL: int = int(os.environ.get("LOG_CHANNEL"))
+
         self.LOG_CHAT: int = int(os.environ.get("LOG_CHAT"))
 
         self.TRIGGER: str = os.environ.get("TRIGGER", "/")

@@ -12,7 +12,7 @@ async def init_task():
     if not Config.DB_ID:
         return
     db_str: str = (
-        await bot.get_messages(chat_id=Config.LOG_CHAT, message_ids=Config.DB_ID)
+        await bot.get_messages(chat_id=Config.LOG_CHANNEL, message_ids=Config.DB_ID)
     ).text
     db_dict = json.loads(db_str)
     if db_dict:
@@ -38,6 +38,6 @@ async def new_chat(bot: BOT, message: Msg):
     else:
         Config.CHATS["GROUPS"].append(chat_id)
     await bot.edit_message_text(
-        chat_id=Config.LOG_CHAT, message_id=Config.DB_ID, text=json.dumps(Config.CHATS)
+        chat_id=Config.LOG_CHANNEL, message_id=Config.DB_ID, text=json.dumps(Config.CHATS)
     )
     message.continue_propagation()

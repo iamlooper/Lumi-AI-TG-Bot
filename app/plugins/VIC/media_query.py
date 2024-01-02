@@ -73,7 +73,7 @@ async def get_media_group(message: Message) -> list[Message]:
 async def parse_media(message: Message) -> dict[str, str] | None:
     media = message.photo or message.document
     if not hasattr(media, "file_name"):
-        media.file_name = f"photo_{media.file_unique_id}.png"
+        media.file_name = f"image_{media.file_unique_id}.png"
     if not check_size:
         return
     if os.path.splitext(media.file_name)[-1].lower() not in ALLOWED_EXTS:
