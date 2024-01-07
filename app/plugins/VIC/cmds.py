@@ -7,7 +7,7 @@ from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
 
-@bot.on_message(filters.command(commands="start", prefixes="/"), group=1)
+@bot.add_cmd(cmd="start")
 async def start_bot(bot: BOT, message: Msg):
     await message.reply(
         """Hello. I am VIC, a Versatile Intelligent Chatbot created by a developer named Looper. I am designed to be a friendly and helpful assistant, capable of understanding and communicating fluently with users like you.

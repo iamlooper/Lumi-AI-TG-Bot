@@ -32,12 +32,7 @@ async def media_query(bot: BOT, message: Message | Msg):
     overflow = check_overflow(message=message)
     if overflow:
         return
-    prompt = (
-        "Analyze the given file(s)"
-        if message.document
-        else "Analyze the given image(s)"
-    )
-    input = message.caption or prompt
+    input = message.caption or ""
     down_resp = await message.reply("Downloading...")
     media: list | None = await get_media_list(message)
     if not media:
@@ -45,7 +40,7 @@ async def media_query(bot: BOT, message: Message | Msg):
         return
 
     history = Config.CONVO_DICT.get(message.unique_chat_user_id, [])
-    data = json.dumps({"prompt": input, "media": media, "history": history})
+    data = json.dumps({"query": input, "media": media, "history": history})
     url = os.path.join(Config.API, "mtt")
     await send_response(message=message, url=url, data=data)
 

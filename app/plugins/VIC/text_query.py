@@ -51,5 +51,5 @@ async def text_query(bot: BOT, message: Message | Msg):
         return
     url = os.path.join(Config.API, "chat")
     history = Config.CONVO_DICT.get(message.unique_chat_user_id, [])
-    data = json.dumps({"prompt": input, "history": history})
+    data = json.dumps({"query": input, "history": history})
     await send_response(message=message, url=url, data=data)
