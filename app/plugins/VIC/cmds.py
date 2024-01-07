@@ -7,7 +7,7 @@ from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
 
-@bot.add_cmd(cmd="start")
+@bot.on_message(filters.command(commands="start", prefixes="/"), group=1)
 async def start_bot(bot: BOT, message: Msg):
     await message.reply(
         """Hello. I am VIC, a Versatile Intelligent Chatbot created by a developer named Looper. I am designed to be a friendly and helpful assistant, capable of understanding and communicating fluently with users like you.
@@ -20,6 +20,7 @@ async def start_bot(bot: BOT, message: Msg):
 - In a public chat, simply reply to VIC's response to continue the conversation.
 - In a private chat, you do not need to reply to VIC's response to continue the conversation."""
     )
+    message.stop_propagation()
 
 
 @bot.on_message(filters.command(commands="ask", prefixes="/"), group=1)
