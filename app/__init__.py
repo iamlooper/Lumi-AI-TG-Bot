@@ -24,3 +24,5 @@ if "com.termux" not in os.environ.get("PATH", ""):
     uvloop.install()
 
 bot: BOT = BOT()
+
+from app.core.decorators.try_except import try_  # NOQA

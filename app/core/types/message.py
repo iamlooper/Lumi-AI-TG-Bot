@@ -20,7 +20,7 @@ class Message(Msg):
         if not self.text_list:
             return
         raw_cmd = self.text_list[0]
-        cmd = raw_cmd[1:]
+        cmd = raw_cmd.replace(self.trigger, "", 1)
         return cmd if cmd in Config.CMD_DICT else None
 
     @cached_property
@@ -44,7 +44,7 @@ class Message(Msg):
     @cached_property
     def replied(self) -> "Message":
         if self.reply_to_message:
-            return (Message.parse_message(self.reply_to_message))  # fmt:skip
+            return Message.parse_message(self.reply_to_message)
 
     @cached_property
     def reply_id(self) -> int | None:
@@ -55,14 +55,16 @@ class Message(Msg):
         return self.replied.task_id if self.replied else None
 
     @cached_property
+    def reply_text_list(self) -> list:
+        return self.replied.text_list if self.replied else []
+
+    @cached_property
     def task_id(self) -> str:
         return f"{self.chat.id}-{self.id}"
 
     @cached_property
     def text_list(self) -> list:
-        if self.text:
-            return self.text.split()
-        return []
+        return self.text.split() if self.text else []
 
     @cached_property
     def trigger(self):
@@ -93,11 +95,11 @@ class Message(Msg):
     async def edit(self, text, del_in: int = 0, block=True, **kwargs) -> "Message":
         if len(str(text)) < 4096:
             kwargs.pop("name", "")
-            task = self.edit_text(text, **kwargs)
+            task = super().edit_text(text=text, **kwargs)
             if del_in:
                 reply = await self.async_deleter(task=task, del_in=del_in, block=block)
             else:
-                reply = await task
+                reply = Message.parse_message(await task)
         else:
             _, reply = await asyncio.gather(
                 super().delete(), self.reply(text, **kwargs)
@@ -135,6 +137,9 @@ class Message(Msg):
                 return response
         except TimeoutError:
             return
+
+    async def log(self):
+        return (await self.copy(Config.LOG_CHAT))  # fmt:skip
 
     async def reply(
         self, text, del_in: int = 0, block: bool = True, **kwargs

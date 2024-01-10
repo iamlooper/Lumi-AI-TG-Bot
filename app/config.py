@@ -17,7 +17,7 @@ class _Config:
 
         self.API_TOKEN = os.environ.get("VIC_API_TOKEN")
 
-        self.BOT_NAME: str = os.environ.get("BOT_NAME")
+        self.BOT_NAME: str = os.environ.get("BOT_NAME", "VIC-BOT")
 
         self.CHATS: dict[str, list[int]] = {"PRIVATE": [], "GROUPS": []}
 
@@ -33,13 +33,15 @@ class _Config:
 
         self.INIT_TASKS: list = []
 
-        self.LOG_CHANNEL: int = int(os.environ.get("LOG_CHANNEL"))
-
         self.LOG_CHAT: int = int(os.environ.get("LOG_CHAT"))
+
+        self.DB_CHANNEL: int = int(os.environ.get("DB_CHANNEL", self.LOG_CHAT))
 
         self.TRIGGER: str = os.environ.get("TRIGGER", "/")
 
         self.REPO = Repo(".")
+
+        self.SLEEPER_TASK = None
 
         self.USERS: list[int] = json.loads(os.environ.get("USERS", "[]"))
 

@@ -34,7 +34,7 @@ class Conversation:
 
     async def get_response(self, timeout: int | None = None) -> Message | None:
         try:
-            resp_future: asyncio.Future = await asyncio.wait_for(
+            resp_future: asyncio.Future.result = await asyncio.wait_for(
                 self.response, timeout=timeout or self.timeout
             )
             return resp_future

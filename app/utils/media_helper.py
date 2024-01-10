@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from os.path import basename, splitext
-from urllib.parse import urlparse
+from urllib.parse import unquote_plus, urlparse
 
 from pyrogram.enums import MessageMediaType
 from pyrogram.types import Message
@@ -50,7 +50,8 @@ def bytes_to_mb(size: int):
 
 
 def get_filename(url: str) -> str:
-    name = basename(urlparse(url).path.rstrip("/"))
+    parsed_url = urlparse(unquote_plus(url))
+    name = basename(parsed_url.path.rstrip("/"))
     if name.lower().endswith((".webp", ".heic")):
         name = name + ".jpg"
     elif name.lower().endswith(".webm"):

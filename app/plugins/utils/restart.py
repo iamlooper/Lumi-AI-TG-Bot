@@ -2,7 +2,8 @@ import os
 
 from pyrogram.enums import ChatType
 
-from app import BOT, Message, bot
+from app import BOT, Config, Message, bot
+from app.plugins.VIC.db import update_db
 
 
 async def init_task() -> None:
@@ -30,4 +31,6 @@ async def restart(bot: BOT, message: Message, u_resp: Message | None = None) -> 
     if reply.chat.type in (ChatType.GROUP, ChatType.SUPERGROUP):
         os.environ["RESTART_MSG"] = str(reply.id)
         os.environ["RESTART_CHAT"] = str(reply.chat.id)
+    Config.SLEEPER_TASK.cancel()
+    await update_db()
     await bot.restart(hard="-h" in message.flags)

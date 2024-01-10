@@ -3,10 +3,11 @@ import asyncio
 from pyrogram import filters
 from pyrogram.types import Message as Msg
 
-from app import BOT, Config, Message, bot
+from app import BOT, Config, Message, bot, try_
 from app.plugins.VIC.text_query import text_query
 
 
+@try_
 @bot.on_message(filters.command(commands="start", prefixes="/"), group=1)
 async def start_bot(bot: BOT, message: Msg):
     await message.reply(
@@ -23,6 +24,7 @@ async def start_bot(bot: BOT, message: Msg):
     message.stop_propagation()
 
 
+@try_
 @bot.on_message(filters.command(commands="ask", prefixes="/"), group=1)
 async def ask_query(bot: BOT, message: Msg):
     message = Message.parse_message(message)
@@ -38,6 +40,7 @@ async def ask_query(bot: BOT, message: Msg):
     message.stop_propagation()
 
 
+@try_
 @bot.on_message(filters.command(commands="clear", prefixes="/"), group=1)
 async def clear_history(bot: BOT, message: Msg):
     message = Message.parse_message(message)
