@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 from io import BytesIO
 
 from pyrogram import filters
@@ -49,7 +50,7 @@ async def new_chat(bot: BOT, message: Msg):
 async def sleeper():
     while True:
         try:
-            await asyncio.sleep(3600)
+            await asyncio.sleep(Config.DB_UPDATE_INTERVAL)
             await update_db()
         except asyncio.exceptions.CancelledError:
             bot.log.info("Sleeper Task Cancelled")
@@ -59,6 +60,8 @@ async def sleeper():
 @try_
 async def update_db():
     latest_data = json.dumps(Config.CHATS)
+    with open("db.json", 'a'):
+        os.utime("db.json", None)    
     with open("db.json", "r") as f:
         if f.read() == latest_data:
             bot.log.info("Duplicate DB Update Skipped.")

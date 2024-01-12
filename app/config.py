@@ -36,6 +36,8 @@ class _Config:
         self.LOG_CHAT: int = int(os.environ.get("LOG_CHAT"))
 
         self.DB_CHANNEL: int = int(os.environ.get("DB_CHANNEL", self.LOG_CHAT))
+        
+        self.DB_UPDATE_INTERVAL: int = int(os.environ.get("DB_UPDATE_INTERVAL", 600))
 
         self.TRIGGER: str = os.environ.get("TRIGGER", "/")
 
