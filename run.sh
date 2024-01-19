@@ -5,6 +5,9 @@ if [ -d "$PWD/venv" ]; then
     source "$PWD/venv/bin/activate"
 fi
 
+# Install requirements.
+pip install -r requirements.txt --no-cache-dir
+
 # Start a dummy web server.
 if [ ! -z "$PORT" ]; then
     py_code="from aiohttp import web
