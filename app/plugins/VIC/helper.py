@@ -1,6 +1,7 @@
 from async_lru import alru_cache
 from pyrogram.raw.functions.messages import SetTyping
 from pyrogram.raw.types import SendMessageCancelAction, SendMessageTypingAction
+from pyrogram.enums import ParseMode
 
 from app import Config, Message, bot
 from app.utils import aiohttp_tools as aio
@@ -37,5 +38,5 @@ async def send_response(message: Message, url: str, data: str | None = None):
         response_json_list = await ses.json()
     extend_or_add(message=message, data=response_json_list)
     ai_response_text = response_json_list[-1]["content"]
-    await message.reply(ai_response_text)
+    await message.reply(ai_response_text, parse_mode=ParseMode.MARKDOWN)
     await bot.invoke(SetTyping(peer=peer, action=SendMessageCancelAction()))
