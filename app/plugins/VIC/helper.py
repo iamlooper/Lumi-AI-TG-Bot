@@ -36,7 +36,7 @@ async def send_response(message: Message, url: str, data: str | None = None):
     ) as ses:
         await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
         response_json_list = await ses.json()
-    extend_or_add(message=message, data=response_json_list)
-    ai_response_text = response_json_list[-1]["content"]
+    extend_or_add(message=message, data=response_json_list["chat"])
+    ai_response_text = response_json_list["chat"][-1]["content"]
     await message.reply(ai_response_text, parse_mode=ParseMode.MARKDOWN)
     await bot.invoke(SetTyping(peer=peer, action=SendMessageCancelAction()))
