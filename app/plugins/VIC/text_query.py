@@ -42,7 +42,7 @@ vic_text_chat_filter = filters.create(chat_convo_check) | filters.create(
 @bot.on_message(vic_text_chat_filter, group=2)
 async def text_query(bot: BOT, message: Message | Msg):
     if not isinstance(message, Message):
-        message = Message.parse_message(message)
+        message = Message.parse(message)
         input = message.text
     else:
         input = message.input

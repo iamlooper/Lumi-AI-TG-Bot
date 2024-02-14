@@ -2,7 +2,7 @@ from pyrogram import filters as _filters
 from pyrogram.types import Message
 
 from app import Config
-from app.core.client.conversation import Conversation
+from app.core.conversation import Conversation
 
 # Overall BOT filters
 

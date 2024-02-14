@@ -7,7 +7,8 @@ from io import StringIO
 from pyrogram.enums import ParseMode
 
 from app import Config, bot, BOT, Message  # isort:skip
-from app.utils import shell, aiohttp_tools as aio  # isort:skip
+from app.utils import shell  # isort:skip
+from app.utils.aiohttp_tools import aio  # isort:skip
 
 
 async def executor(bot: BOT, message: Message) -> Message | None:
@@ -34,7 +35,7 @@ async def executor(bot: BOT, message: Message) -> Message | None:
         )
     except asyncio.exceptions.CancelledError:
         return await reply.edit("`Cancelled....`")
-    except BaseException:
+    except Exception:
         func_out = str(traceback.format_exc())
     sys.stdout = sys.__stdout__
     sys.stderr = sys.__stderr__
@@ -45,9 +46,9 @@ async def executor(bot: BOT, message: Message) -> Message | None:
         await reply.delete()
         return
     if "-s" in message.flags:
-        output = f">> `{output}`"
+        output = f">> ```\n{output}```"
     else:
-        output = f"```python\n> {code}```\n\n>> `{output}`"
+        output = f"```python\n{code}```\n\n```\n{output}```"
     await reply.edit(
         output,
         name="exec.txt",
@@ -58,5 +59,8 @@ async def executor(bot: BOT, message: Message) -> Message | None:
 
 if Config.DEV_MODE:
     Config.CMD_DICT["py"] = Config.CMD(
-        func=executor, path=inspect.stack()[0][1], doc=executor.__doc__
+        cmd="py",
+        func=executor,
+        path=inspect.stack()[0][1],
+        sudo=False,
     )

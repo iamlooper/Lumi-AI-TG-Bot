@@ -3,31 +3,32 @@ import asyncio
 from pyrogram import filters
 from pyrogram.types import Message as Msg
 
-from app import BOT, Config, Message, bot, try_
+from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
+HELP_TEXT = (
+    "Hello. I am VIC, a Versatile Intelligent Chatbot created by a developer named Looper. "
+    "I am designed to be a friendly and helpful assistant, "
+    "capable of understanding and communicating fluently with users like you."
+    "\n**Usage:**"
+    "\n- /ask Hello! (starts a new conversation, "
+    "but clears the previous chat and starts a new conversation if the previous chat exists.)"
+    "\n- /clear (clears chat history.)"
+    "\n**Continued Conversation:**"
+    "\n- In a public chat, simply reply to VIC's response to continue the conversation."
+    "\n In a private chat, you do not need to reply to VIC's response to continue the conversation."
+)
 
-@try_
+
 @bot.on_message(filters.command(commands="start", prefixes="/"), group=1)
 async def start_bot(bot: BOT, message: Msg):
-    await message.reply(
-        """Hello. I am VIC, a Versatile Intelligent Chatbot created by a developer named Looper. I am designed to be a friendly and helpful assistant, capable of understanding and communicating fluently with users like you.
-
-**Usage:**
-- /ask Hello! (starts a new conversation, but clears the previous chat and starts a new conversation if the previous chat exists.)
-- /clear (clears chat history.)
-
-**Continued Conversation:**
-- In a public chat, simply reply to VIC's response to continue the conversation.
-- In a private chat, you do not need to reply to VIC's response to continue the conversation."""
-    )
+    await message.reply(text=HELP_TEXT)
     message.stop_propagation()
 
 
-@try_
 @bot.on_message(filters.command(commands="ask", prefixes="/"), group=1)
 async def ask_query(bot: BOT, message: Msg):
-    message = Message.parse_message(message)
+    message = Message.parse(message)
     input = message.input
     if not input:
         await message.reply("Usage: `/ask Hello`")
@@ -40,10 +41,9 @@ async def ask_query(bot: BOT, message: Msg):
     message.stop_propagation()
 
 
-@try_
 @bot.on_message(filters.command(commands="clear", prefixes="/"), group=1)
 async def clear_history(bot: BOT, message: Msg):
-    message = Message.parse_message(message)
+    message = Message.parse(message)
     history = Config.CONVO_DICT.pop(message.unique_chat_user_id, None)
     if history:
         await message.reply("Chat history cleared!")

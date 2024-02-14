@@ -13,15 +13,15 @@ async def get_ids(bot: BOT, message: Message) -> None:
         ids: str = ""
         reply_forward = reply.forward_from_chat
         reply_user = reply.from_user
-        ids += f"<b>Chat</b> : `{reply.chat.id}`\n"
+        ids += f"<b>Chat</b>: `{reply.chat.id}`\n"
         if reply_forward:
-            ids += f"<b>Replied {'Channel' if reply_forward.type == ChatType.CHANNEL else 'Chat'}</b> : `{reply_forward.id}`\n"
+            ids += f"<b>Replied {'Channel' if reply_forward.type == ChatType.CHANNEL else 'Chat'}</b>: `{reply_forward.id}`\n"
         if reply_user:
-            ids += f"<b>User</b> : {reply.from_user.id}"
+            ids += f"<b>User</b>: {reply.from_user.id}"
     elif message.input:
         ids: int = (await bot.get_chat(message.input[1:])).id
     else:
-        ids: str = f"<b>Chat</b> :`{message.chat.id}`"
+        ids: str = f"<b>Chat</b>:`{message.chat.id}`"
     await message.reply(ids)
 
 

@@ -31,6 +31,6 @@ async def get_message(bot: BOT, message: Message):
         await message.reply(str(remote_message))
         return
     if hasattr(remote_message, attr):
-        await message.reply(str(getattr(remote_message, attr)))
+        await message.reply(f"<pre language=json>{getattr(remote_message, attr)}</pre>")
         return
     await message.reply(f"Message object has no attribute '{attr}'")

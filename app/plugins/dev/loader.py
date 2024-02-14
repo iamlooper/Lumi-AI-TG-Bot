@@ -1,5 +1,6 @@
 import importlib
 import inspect
+import os
 import sys
 import traceback
 
@@ -11,21 +12,35 @@ async def loader(bot: BOT, message: Message) -> Message | None:
         not message.replied
         or not message.replied.document
         or not message.replied.document.file_name.endswith(".py")
-    ):
-        return await message.reply("reply to a plugin.")
+    ) and "-r" not in message.flags:
+        await message.reply("Reply to a Plugin.")
+        return
+    if "-r" in message.flags:
+        plugin = message.flt_input
+        cmd_module = Config.CMD_DICT.get(plugin)
+        if not cmd_module:
+            await message.reply(text="Invalid cmd.")
+            return
+        module = str(cmd_module.func.__module__)
+    else:
+        file_name: str = os.path.splitext(message.replied.document.file_name)[0]
+        module = f"app.temp.{file_name}"
+        await message.replied.download("app/temp/")
     reply: Message = await message.reply("Loading....")
-    file_name: str = message.replied.document.file_name.rstrip(".py")
-    reload = sys.modules.pop(f"app.temp.{file_name}", None)
+    reload = sys.modules.pop(module, None)
     status: str = "Reloaded" if reload else "Loaded"
-    await message.replied.download("app/temp/")
     try:
-        importlib.import_module(f"app.temp.{file_name}")
-    except BaseException:
-        return await reply.edit(str(traceback.format_exc()))
-    await reply.edit(f"{status} {file_name}.py.")
+        importlib.import_module(module)
+    except Exception:
+        await reply.edit(str(traceback.format_exc()))
+        return
+    await reply.edit(f"{status} {module}")
 
 
 if Config.DEV_MODE:
     Config.CMD_DICT["load"] = Config.CMD(
-        func=loader, path=inspect.stack()[0][1], doc=loader.__doc__
+        cmd="load",
+        func=loader,
+        path=inspect.stack()[0][1],
+        sudo=False,
     )

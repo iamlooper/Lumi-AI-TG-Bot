@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from pyrogram.enums import ChatType
 
@@ -14,8 +15,8 @@ async def init_task() -> None:
         await bot.edit_message_text(
             chat_id=restart_chat, message_id=restart_msg, text="__Started__"
         )
-        os.environ.pop("RESTART_MSG", "")
-        os.environ.pop("RESTART_CHAT", "")
+        os.environ.pop("RESTART_MSG")
+        os.environ.pop("RESTART_CHAT")
 
 
 @bot.add_cmd(cmd="restart")
@@ -23,14 +24,21 @@ async def restart(bot: BOT, message: Message, u_resp: Message | None = None) -> 
     """
     CMD: RESTART
     INFO: Restart the Bot.
-    FLAGS: -h for hard restart and clearing logs
+    FLAGS:
+        -h: for hard restart.
+        -cl: for clearing logs.
+        -cp: for clearing temp plugins.
     Usage:
         .restart | .restart -h
     """
-    reply: Message = u_resp or await message.reply("Restarting....")
+    reply: Message = u_resp or await message.reply("restarting....")
     if reply.chat.type in (ChatType.GROUP, ChatType.SUPERGROUP):
         os.environ["RESTART_MSG"] = str(reply.id)
         os.environ["RESTART_CHAT"] = str(reply.chat.id)
     Config.SLEEPER_TASK.cancel()
     await update_db()
+    if "-cl" in message.flags:
+        os.remove("logs/app_logs.txt")
+    if "-cp" in message.flags:
+        shutil.rmtree("app/temp")
     await bot.restart(hard="-h" in message.flags)

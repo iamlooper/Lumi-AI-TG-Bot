@@ -1,3 +1,4 @@
+import re
 from enum import Enum, auto
 from os.path import basename, splitext
 from urllib.parse import unquote_plus, urlparse
@@ -49,19 +50,35 @@ def bytes_to_mb(size: int):
     return round(size / 1048576, 1)
 
 
-def get_filename(url: str) -> str:
+def get_filename_from_url(url: str, tg_safe: bool = False) -> str:
     parsed_url = urlparse(unquote_plus(url))
     name = basename(parsed_url.path.rstrip("/"))
-    if name.lower().endswith((".webp", ".heic")):
-        name = name + ".jpg"
-    elif name.lower().endswith(".webm"):
-        name = name + ".mp4"
+    if tg_safe:
+        return make_file_name_tg_safe(file_name=name)
     return name
+
+
+def get_filename_from_headers(headers: dict, tg_safe: bool = False) -> str | None:
+    content_disposition = headers.get("Content-Disposition", "")
+    match = re.search(r"filename=(.+)", content_disposition)
+    if not match:
+        return
+    if tg_safe:
+        return make_file_name_tg_safe(file_name=match.group(1))
+    return match.group(1)
+
+
+def make_file_name_tg_safe(file_name: str) -> str:
+    if file_name.lower().endswith((".webp", ".heic")):
+        file_name = file_name + ".jpg"
+    elif file_name.lower().endswith(".webm"):
+        file_name = file_name + ".mp4"
+    return file_name
 
 
 def get_type(url: str | None = "", path: str | None = "") -> MediaType | None:
     if url:
-        media = get_filename(url)
+        media = get_filename_from_url(url)
     else:
         media = path
     name, ext = splitext(media)

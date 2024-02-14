@@ -1,6 +1,7 @@
 import base64
 import json
 import os
+from io import BytesIO
 
 from pyrogram import filters
 from pyrogram.types import Message as Msg
@@ -28,7 +29,7 @@ async def media_check(filters, client, message: Message) -> bool:
 @bot.on_message(filters.create(media_check), group=2)
 async def media_query(bot: BOT, message: Message | Msg):
     if not isinstance(message, Message):
-        message = Message.parse_message(message)
+        message = Message.parse(message)
     overflow = check_overflow(message=message)
     if overflow:
         return
@@ -73,10 +74,11 @@ async def parse_media(message: Message) -> dict[str, str] | None:
         return
     if os.path.splitext(media.file_name)[-1].lower() not in ALLOWED_EXTS:
         return
-    file = await message.download(in_memory=True)
+    # fmt:skip
+    file: BytesIO = (await message.download(in_memory=True)).getvalue()
     return {
         "filename": media.file_name,
-        "file_bytes": base64.b64encode(file.getvalue()).decode("utf-8"),
+        "file_bytes": base64.b64encode(file).decode("utf-8"),
     }
 
 

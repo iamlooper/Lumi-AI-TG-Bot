@@ -8,7 +8,7 @@ from pyrogram.enums import ChatType
 from pyrogram.types import InputMediaDocument
 from pyrogram.types import Message as Msg
 
-from app import BOT, Config, bot, try_
+from app import BOT, Config, bot
 
 
 # Setup DB CHATS on boot.
@@ -32,7 +32,6 @@ def new_chat_filter(filters, client, message: Msg) -> bool:
 
 
 # Listen for a new Message and add chat to DB
-@try_
 @bot.on_message(
     filters=(filters.create(new_chat_filter) & ~filters.channel),
     group=0,
@@ -46,7 +45,6 @@ async def new_chat(bot: BOT, message: Msg):
     message.continue_propagation()
 
 
-@try_
 async def sleeper():
     while True:
         try:
@@ -57,11 +55,10 @@ async def sleeper():
             return
 
 
-@try_
 async def update_db():
     latest_data = json.dumps(Config.CHATS)
-    with open("db.json", 'a'):
-        os.utime("db.json", None)    
+    with open("db.json", "a"):
+        os.utime("db.json", None)
     with open("db.json", "r") as f:
         if f.read() == latest_data:
             bot.log.info("Duplicate DB Update Skipped.")
