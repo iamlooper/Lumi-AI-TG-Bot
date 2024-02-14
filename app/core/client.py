@@ -35,7 +35,7 @@ class BOT(AddCmd, SendMessage, ChannelLogger, Client):
             name="bot",
             api_id=int(os.environ.get("API_ID")),
             api_hash=os.environ.get("API_HASH"),
-            session_string=os.environ.get("SESSION_STRING").strip(),
+            bot_token=os.environ.get("BOT_TOKEN"),
             parse_mode=ParseMode.DEFAULT,
             sleep_threshold=30,
             max_concurrent_transmissions=2,
@@ -59,7 +59,6 @@ class BOT(AddCmd, SendMessage, ChannelLogger, Client):
     @staticmethod
     async def shut_down():
         await aio.close()
-        LOGGER.info("DB Closed.")
 
     async def restart(self, hard=False) -> None:
         await self.shut_down()
