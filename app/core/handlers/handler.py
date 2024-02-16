@@ -8,6 +8,12 @@ from app import BOT, Config, Convo, Message, bot
 from app.core.handlers import filters
 
 
+@bot.on_message(filters._filters.create(lambda _,__,m: not m.chat))
+async def _(c,m):
+    await bot.log_text(str(m))
+    m.stop_propagation()
+
+
 @bot.on_message(filters.convo_filter, group=0)
 @bot.on_edited_message(filters.convo_filter, group=0)
 async def convo_handler(bot: BOT, message: Msg):
