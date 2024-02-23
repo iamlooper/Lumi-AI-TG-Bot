@@ -28,8 +28,7 @@ async def media_check(filters, client, message: Message) -> bool:
 
 @bot.on_message(filters.create(media_check), group=2)
 async def media_query(bot: BOT, message: Message | Msg):
-    if not isinstance(message, Message):
-        message = Message.parse(message)
+    message = Message.parse(message)
     overflow = check_overflow(message=message)
     if overflow:
         return
@@ -40,7 +39,7 @@ async def media_query(bot: BOT, message: Message | Msg):
         await down_resp.edit("File size exceeds 3MB or is an unsupported file type.")
         return
 
-    history = Config.CONVO_DICT.get(message.unique_chat_user_id, [])
+    history = Config.CONVO_DICT[message.unique_chat_user_id]
     data = json.dumps({"query": input, "media": media, "history": history})
     url = os.path.join(Config.API, "mtt")
     await send_response(message=message, url=url, data=data)
@@ -70,11 +69,10 @@ async def parse_media(message: Message) -> dict[str, str] | None:
     media = message.photo or message.document
     if not hasattr(media, "file_name"):
         media.file_name = f"image_{media.file_unique_id}.png"
-    if not check_size:
+    if not check_size(media):
         return
     if os.path.splitext(media.file_name)[-1].lower() not in ALLOWED_EXTS:
         return
-    # fmt:skip
     file: BytesIO = (await message.download(in_memory=True)).getvalue()
     return {
         "filename": media.file_name,

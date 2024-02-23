@@ -26,8 +26,17 @@ async def start_bot(bot: BOT, message: Msg):
     message.stop_propagation()
 
 
+async def valid_user(message: Msg) -> bool:
+    if not message.from_user:
+        await message.reply(text="Anonymous Admins | Channels cannot use this command.")
+        return False
+    return True
+
+
 @bot.on_message(filters.command(commands="ask", prefixes="/"), group=1)
 async def ask_query(bot: BOT, message: Msg):
+    if not (await valid_user(message)):
+        return
     message = Message.parse(message)
     input = message.input
     if not input:
@@ -43,6 +52,8 @@ async def ask_query(bot: BOT, message: Msg):
 
 @bot.on_message(filters.command(commands="clear", prefixes="/"), group=1)
 async def clear_history(bot: BOT, message: Msg):
+    if not (await valid_user(message)):
+        return
     message = Message.parse(message)
     history = Config.CONVO_DICT.pop(message.unique_chat_user_id, None)
     if history:

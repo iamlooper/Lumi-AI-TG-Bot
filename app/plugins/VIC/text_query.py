@@ -41,15 +41,12 @@ vic_text_chat_filter = filters.create(chat_convo_check) | filters.create(
 
 @bot.on_message(vic_text_chat_filter, group=2)
 async def text_query(bot: BOT, message: Message | Msg):
-    if not isinstance(message, Message):
-        message = Message.parse(message)
-        input = message.text
-    else:
-        input = message.input
+    message = Message.parse(message)
+    input = message.text
     overflow = check_overflow(message=message)
     if overflow:
         return
     url = os.path.join(Config.API, "chat")
-    history = Config.CONVO_DICT.get(message.unique_chat_user_id, [])
+    history = Config.CONVO_DICT[message.unique_chat_user_id]
     data = json.dumps({"query": input, "history": history})
     await send_response(message=message, url=url, data=data)
