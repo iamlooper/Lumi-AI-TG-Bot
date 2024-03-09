@@ -40,7 +40,7 @@ async def media_query(bot: BOT, message: Message | Msg):
         return
 
     history = Config.CONVO_DICT[message.unique_chat_user_id]
-    data = json.dumps({"query": input, "media": media, "history": history})
+    data = json.dumps({"query": input, "files": media, "history": history})
     url = os.path.join(Config.API, "mtt")
     await send_response(message=message, url=url, data=data)
 
@@ -81,4 +81,4 @@ async def parse_media(message: Message) -> dict[str, str] | None:
 
 
 def check_size(media):
-    return media.file_size < 3145728
+    return media.file_size < 2097152

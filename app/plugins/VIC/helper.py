@@ -26,6 +26,7 @@ async def send_response(message: Message, url: str, data: str | None = None):
         url=url,
         headers={"Content-Type": "application/json"},
         data=data,
+        timeout=60
     ) as ses:
         await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
         response_json_list = await ses.json()
