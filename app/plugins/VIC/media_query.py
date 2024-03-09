@@ -41,7 +41,7 @@ async def media_query(bot: BOT, message: Message | Msg):
 
     history = Config.CONVO_DICT[message.unique_chat_user_id]
     data = json.dumps({"query": input, "files": media, "history": history})
-    url = os.path.join(Config.API, "mtt")
+    url = os.path.join(Config.API, "chat")
     await send_response(message=message, url=url, data=data)
 
 

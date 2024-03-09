@@ -25,8 +25,7 @@ async def send_response(message: Message, url: str, data: str | None = None):
     async with aio.session.post(
         url=url,
         headers={"Content-Type": "application/json"},
-        data=data,
-        timeout=60
+        data=data
     ) as ses:
         await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
         response_json_list = await ses.json()
