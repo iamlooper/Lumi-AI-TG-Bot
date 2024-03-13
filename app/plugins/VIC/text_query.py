@@ -42,7 +42,10 @@ vic_text_chat_filter = filters.create(chat_convo_check) | filters.create(
 @bot.on_message(vic_text_chat_filter, group=2)
 async def text_query(bot: BOT, message: Message | Msg):
     message = Message.parse(message)
-    input = message.input
+    if message.text.startswith("/ask"):
+        input = message.input
+    else:
+        input = message.text
     overflow = check_overflow(message=message)
     if overflow:
         return
