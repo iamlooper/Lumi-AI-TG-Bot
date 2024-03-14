@@ -6,12 +6,38 @@ from io import BytesIO
 from pyrogram import filters
 from pyrogram.types import Message as Msg
 
-from app import BOT, Config, Message, bot
-from app.plugins.VIC.helper import check_overflow, send_response
-from app.plugins.VIC.text_query import chat_convo_check, private_convo_check
-from app.utils.media_helper import MediaExts
+from vic import BOT, Message, bot
+from vic import extra_config
+from vic.helper import check_overflow, send_response
+from vic.chat_queries.text_query import chat_convo_check, private_convo_check
 
-ALLOWED_EXTS = {*MediaExts.PHOTO, *MediaExts.TEXT, *MediaExts.DOCUMENT}
+
+ALLOWED_EXTS = {
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".txt",
+    ".json",
+    ".xml",
+    ".html",
+    ".css",
+    ".md",
+    ".log",
+    ".ini",
+    ".conf",
+    ".sh",
+    ".py",
+    ".js",
+    ".java",
+    ".kt",
+    ".c",
+    ".cpp",
+    ".h",
+    ".hpp",
+    ".pdf",
+    ".docx",
+    ".xlsx",
+}
 
 
 async def media_check(filters, client, message: Message) -> bool:
@@ -39,15 +65,15 @@ async def media_query(bot: BOT, message: Message | Msg):
         await down_resp.edit("File size exceeds 3MB or is an unsupported file type.")
         return
 
-    history = Config.CONVO_DICT[message.unique_chat_user_id]
+    history = extra_config.CONVO_DICT[message.unique_chat_user_id]
     data = json.dumps({"query": input, "files": media, "history": history})
-    url = os.path.join(Config.API, "chat")
+    url = os.path.join(extra_config.API, "chat")
     await send_response(message=message, url=url, data=data)
 
 
 async def get_media_list(message: Message) -> list[dict[str, str]]:
     if message.media_group_id:
-        group = Config.CACHED_MEDIA_GROUPS.pop(message.media_group_id)
+        group = extra_config.CACHED_MEDIA_GROUPS.pop(message.media_group_id)
         group_dict = [await parse_media(msg) for msg in group]
         return [media_dict for media_dict in group_dict if media_dict]
     media_dict = await parse_media(message)
@@ -57,11 +83,11 @@ async def get_media_list(message: Message) -> list[dict[str, str]]:
 
 async def get_media_group(message: Message) -> list[Message]:
     media_id = message.media_group_id
-    cache = Config.CACHED_MEDIA_GROUPS.get(media_id)
+    cache = extra_config.CACHED_MEDIA_GROUPS.get(media_id)
     if cache:
         return cache
     group = await message.get_media_group()
-    Config.CACHED_MEDIA_GROUPS[media_id] = group
+    extra_config.CACHED_MEDIA_GROUPS[media_id] = group
     return group
 
 

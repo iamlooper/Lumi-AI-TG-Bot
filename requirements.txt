@@ -1,13 +1,1 @@
-aiohttp
-httpx
-aiofiles
-async-lru
-dnspython
-motor
-pymongo
-gitpython
-pyrogram
-python-dotenv
-tgCrypto
-telegraph
-uvloop
+git+https://github.com/thedragonsinn/ub-core.git
