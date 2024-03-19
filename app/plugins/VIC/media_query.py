@@ -36,13 +36,12 @@ async def media_query(bot: BOT, message: Message | Msg):
     down_resp = await message.reply("Downloading...")
     media: list | None = await get_media_list(message)
     if not media:
-        await down_resp.edit("File size exceeds 3MB or is an unsupported file type.")
+        await down_resp.edit("File size exceeds 2MB or is an unsupported file type.")
         return
 
     history = Config.CONVO_DICT[message.unique_chat_user_id]
     data = json.dumps({"query": input, "files": media, "history": history})
-    url = os.path.join(Config.API, "chat")
-    await send_response(message=message, url=url, data=data)
+    await send_response(message=message, url=Config.API, data=data)
 
 
 async def get_media_list(message: Message) -> list[dict[str, str]]:

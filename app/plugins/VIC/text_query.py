@@ -49,7 +49,6 @@ async def text_query(bot: BOT, message: Message | Msg):
     overflow = check_overflow(message=message)
     if overflow:
         return
-    url = os.path.join(Config.API, "chat")
     history = Config.CONVO_DICT[message.unique_chat_user_id]
     data = json.dumps({"query": input, "history": history})
-    await send_response(message=message, url=url, data=data)
+    await send_response(message=message, url=Config.API, data=data)
