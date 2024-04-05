@@ -6,6 +6,54 @@ from pyrogram.raw.types import SendMessageCancelAction, SendMessageTypingAction
 from app import Config, Message, bot
 from app.utils.aiohttp_tools import aio
 
+def add_response_json_to_convo(message: Message, response_json: dict | None = None):
+    if response_json is not None:
+        if "web_search_results" in response_json:
+            Config.CONVO_DICT[message.unique_chat_user_id].extend(
+                [
+                    {
+                        "role": "user",
+                        "content": ""
+                    },
+                    {
+                        "role": "ai",
+                        "content": response_json["web_search_results"]
+                    }
+                ]
+            )
+
+        if "files_contents" in response_json:
+            Config.CONVO_DICT[message.unique_chat_user_id].extend(
+                [
+                    {
+                        "role": "user",
+                        "content": ""
+                    },
+                    {
+                        "role": "ai",
+                        "content": response_json["files_contents"]
+                    }
+                ]
+            )
+
+        if message.text.startswith("/ask"):
+            input = message.input
+        else:
+            input = message.text
+
+        Config.CONVO_DICT[message.unique_chat_user_id].extend(
+            [
+                {
+                    "role": "user",
+                    "content": input
+                },
+                {
+                    "role": "ai",
+                    "content": response_json["response"]
+                }
+            ]
+        )
+
 
 def check_overflow(message: Message):
     if message.unique_chat_user_id not in Config.CONVO_DICT:
@@ -28,8 +76,8 @@ async def send_response(message: Message, url: str, data: str | None = None):
         data=data
     ) as ses:
         await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
-        response_json_list = await ses.json()
-    Config.CONVO_DICT[message.unique_chat_user_id].extend(response_json_list["chat"])
-    ai_response_text = response_json_list["chat"][-1]["content"]
+        response_json = await ses.json()
+    add_response_json_to_convo(message, response_json)
+    ai_response_text = response_json["response"]
     await message.reply(ai_response_text, parse_mode=ParseMode.MARKDOWN)
     await bot.invoke(SetTyping(peer=peer, action=SendMessageCancelAction()))
