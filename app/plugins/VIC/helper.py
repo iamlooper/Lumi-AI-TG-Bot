@@ -6,7 +6,7 @@ from pyrogram.raw.types import SendMessageCancelAction, SendMessageTypingAction
 from app import Config, Message, bot
 from app.utils.aiohttp_tools import aio
 
-def add_response_json_to_convo(message: Message, response_json: dict | None = None):
+def add_response_json_to_convo(message: Message, query: str, response_json: dict | None = None):
     if response_json is not None:
         if "web_search_results" in response_json:
             Config.CONVO_DICT[message.unique_chat_user_id].extend(
@@ -36,16 +36,11 @@ def add_response_json_to_convo(message: Message, response_json: dict | None = No
                 ]
             )
 
-        if message.text.startswith("/ask"):
-            input = message.input
-        else:
-            input = message.text
-
         Config.CONVO_DICT[message.unique_chat_user_id].extend(
             [
                 {
                     "role": "user",
-                    "content": input
+                    "content": query
                 },
                 {
                     "role": "ai",
@@ -67,7 +62,7 @@ async def get_peer(chat_id: int):
     return peer
 
 
-async def send_response(message: Message, url: str, data: str | None = None):
+async def send_response(message: Message, query: str, url: str, data: str | None = None):
     peer = await get_peer(message.chat.id)
     await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
     async with aio.session.post(
@@ -77,7 +72,7 @@ async def send_response(message: Message, url: str, data: str | None = None):
     ) as ses:
         await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
         response_json = await ses.json()
-    add_response_json_to_convo(message, response_json)
+    add_response_json_to_convo(message, query, response_json)
     ai_response_text = response_json["response"]
     await message.reply(ai_response_text, parse_mode=ParseMode.MARKDOWN)
     await bot.invoke(SetTyping(peer=peer, action=SendMessageCancelAction()))
