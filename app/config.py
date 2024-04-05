@@ -35,6 +35,8 @@ class Config:
 
     CONVO_DICT: dict[str, list[dict[str, str]]] = defaultdict(list)
 
+    WEB_SEARCH: dict[str, bool] = defaultdict(bool)
+
     CACHED_MEDIA_GROUPS: dict[str, list[Message]] = {}
 
     DEV_MODE: int = int(os.environ.get("DEV_MODE", 0))

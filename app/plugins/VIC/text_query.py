@@ -42,7 +42,7 @@ vic_text_chat_filter = filters.create(chat_convo_check) | filters.create(
 @bot.on_message(vic_text_chat_filter, group=2)
 async def text_query(bot: BOT, message: Message | Msg):
     message = Message.parse(message)
-    if message.text.startswith("/ask"):
+    if message.text.startswith("/ask") or message.text.startswith("/web_ask"):
         query = message.input
     else:
         query = message.text
@@ -50,5 +50,5 @@ async def text_query(bot: BOT, message: Message | Msg):
     if overflow:
         return
     history = Config.CONVO_DICT[message.unique_chat_user_id]
-    data = json.dumps({"query": query, "history": history})
+    data = json.dumps({"query": query, "history": history, "web_search": Config.WEB_SEARCH[message.unique_chat_user_id]})
     await send_response(message=message, query=query, url=Config.API, data=data)

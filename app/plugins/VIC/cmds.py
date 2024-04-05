@@ -7,16 +7,14 @@ from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
 HELP_TEXT = (
-    "Hello. I am VIC, a Versatile Intelligent Chatbot created by a developer named Looper. "
-    "I am designed to be a friendly and helpful assistant, "
-    "capable of understanding and communicating fluently with users like you."
+    "Hello. I am Lumi, a friendly AI sidekick with a quirky sense of humor."
     "\n**Usage:**"
     "\n- /ask Hello! (starts a new conversation, "
     "but clears the previous chat and starts a new conversation if the previous chat exists.)"
     "\n- /clear (clears chat history.)"
     "\n**Continued Conversation:**"
-    "\n- In a public chat, simply reply to VIC's response to continue the conversation."
-    "\n In a private chat, you do not need to reply to VIC's response to continue the conversation."
+    "\n- In a public chat, simply reply to Lumi's response to continue the conversation."
+    "\n In a private chat, you do not need to reply to Lumi's response to continue the conversation."
 )
 
 
@@ -38,17 +36,34 @@ async def ask_query(bot: BOT, message: Msg):
     if not (await valid_user(message)):
         return
     message = Message.parse(message)
-    input = message.input
-    if not input:
+    query = message.input
+    if not query:
         await message.reply("Usage: `/ask Hello`")
         return
 
     history = Config.CONVO_DICT.pop(message.unique_chat_user_id, None)
     if history:
         await message.reply("Starting a new chat...")
+    Config.WEB_SEARCH[message.unique_chat_user_id] = False
     await text_query(bot=bot, message=message)
     message.stop_propagation()
+    
+@bot.on_message(filters.command(commands="web_ask", prefixes="/"), group=1)
+async def web_ask_query(bot: BOT, message: Msg):
+    if not (await valid_user(message)):
+        return
+    message = Message.parse(message)
+    query = message.input
+    if not query:
+        await message.reply("Usage: `/web_ask Hello. How many subscribers does MrBeast have on YouTube?`")
+        return
 
+    history = Config.CONVO_DICT.pop(message.unique_chat_user_id, None)
+    if history:
+        await message.reply("Starting a new chat...")
+    Config.WEB_SEARCH[message.unique_chat_user_id] = True
+    await text_query(bot=bot, message=message)
+    message.stop_propagation()
 
 @bot.on_message(filters.command(commands="clear", prefixes="/"), group=1)
 async def clear_history(bot: BOT, message: Msg):
