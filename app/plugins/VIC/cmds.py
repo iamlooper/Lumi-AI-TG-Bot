@@ -6,18 +6,16 @@ from pyrogram.types import Message as Msg
 from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
-HELP_TEXT = (
-    "Hello. I am Lumi, a friendly AI sidekick with a human-like personality."
-    "\n**Usage:**"
-    "\n- /ask Hello! (starts a new conversation, "
-    "but clears the previous chat and starts a new conversation if the previous chat exists.)"
-    "\n- /web_ask Hello! How many subscribers does MrBeast have on YouTube? (starts a new conversation with web search, "
-    "but clears the previous chat and starts a new conversation if the previous chat exists.)"
-    "\n- /clear (clears chat history.)"
-    "\n**Continued Conversation:**"
-    "\n- In a public chat, simply reply to Lumi's response to continue the conversation."
-    "\n In a private chat, you do not need to reply to Lumi's response to continue the conversation."
-)
+HELP_TEXT = """Hello. I am Lumi, a friendly AI sidekick with a human-like personality.
+
+**Usage**:
+- /ask Hello! (starts new chat, clears previous if exists)
+- /web_ask Hello! How many subscribers does MrBeast have on YouTube? (starts web search chat, clears previous if exists)
+- /clear (clears chat history)
+
+**Continued Conversation**:
+- Public chat: Reply to Lumi to continue.
+- Private chat: No need to reply to Lumi."""
 
 
 @bot.on_message(filters.command(commands="start", prefixes="/"), group=1)
