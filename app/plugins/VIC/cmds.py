@@ -7,9 +7,11 @@ from app import BOT, Config, Message, bot
 from app.plugins.VIC.text_query import text_query
 
 HELP_TEXT = (
-    "Hello. I am Lumi, a friendly AI sidekick with a quirky sense of humor."
+    "Hello. I am Lumi, a friendly AI sidekick with a human-like personality."
     "\n**Usage:**"
     "\n- /ask Hello! (starts a new conversation, "
+    "but clears the previous chat and starts a new conversation if the previous chat exists.)"
+    "\n- /web_ask Hello! How many subscribers does MrBeast have on YouTube? (starts a new conversation with web search, "
     "but clears the previous chat and starts a new conversation if the previous chat exists.)"
     "\n- /clear (clears chat history.)"
     "\n**Continued Conversation:**"
