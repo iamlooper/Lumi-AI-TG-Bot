@@ -13,7 +13,7 @@ def add_response_json_to_convo(message: Message, query: str, response_json: dict
                 [
                     {
                         "role": "user",
-                        "content": ""
+                        "content": "."
                     },
                     {
                         "role": "ai",
@@ -27,7 +27,7 @@ def add_response_json_to_convo(message: Message, query: str, response_json: dict
                 [
                     {
                         "role": "user",
-                        "content": ""
+                        "content": "."
                     },
                     {
                         "role": "ai",
