@@ -6,5 +6,5 @@ __pycache__
 .idea/
 conf_backup/
 logs/
-db*
+db.json
 app_error.txt
