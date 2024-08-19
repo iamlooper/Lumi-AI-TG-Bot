@@ -23,11 +23,9 @@ class Cmd(Str):
 class Config:
     CMD = Cmd
 
-    API: str = os.environ.get("VIC_API")
+    API: str = os.environ.get("LUMI_AI_API")
 
-    API_TOKEN = os.environ.get("VIC_API_TOKEN")
-
-    BOT_NAME: str = os.environ.get("BOT_NAME", "VIC-BOT")
+    BOT_NAME: str = os.environ.get("BOT_NAME", "Lumi-AI")
 
     CHATS: dict[str, list[int]] = {"PRIVATE": [], "GROUPS": []}
 
@@ -60,5 +58,5 @@ class Config:
     USERS: list[int] = json.loads(os.environ.get("USERS", "[]"))
 
     UPSTREAM_REPO: str = os.environ.get(
-        "UPSTREAM_REPO", "https://github.com/iamlooper/VIC-TG-Bot"
+        "UPSTREAM_REPO", "https://github.com/iamlooper/Lumi-AI-TG-Bot"
     )

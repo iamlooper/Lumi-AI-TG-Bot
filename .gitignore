@@ -7,3 +7,4 @@ __pycache__
 conf_backup/
 logs/
 db*
+app_error.txt

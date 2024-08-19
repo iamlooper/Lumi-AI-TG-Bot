@@ -7,8 +7,8 @@ from pyrogram import filters
 from pyrogram.types import Message as Msg
 
 from app import BOT, Config, Message, bot
-from app.plugins.VIC.helper import check_overflow, send_response
-from app.plugins.VIC.text_query import chat_convo_check, private_convo_check
+from app.plugins.lumi_ai.helper import check_overflow, send_response
+from app.plugins.lumi_ai.text_query import chat_convo_check, private_convo_check
 from app.utils.media_helper import MediaExts
 
 ALLOWED_EXTS = {*MediaExts.PHOTO, *MediaExts.TEXT, *MediaExts.DOCUMENT}

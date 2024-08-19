@@ -6,7 +6,7 @@ from pyrogram.enums import ChatType
 from pyrogram.types import Message as Msg
 
 from app import BOT, Config, Message, bot
-from app.plugins.VIC.helper import check_overflow, send_response
+from app.plugins.lumi_ai.helper import check_overflow, send_response
 
 
 def chat_convo_check(filters, client, message: Message, media: bool = False) -> bool:
@@ -34,12 +34,12 @@ def private_convo_check(filters, client, message: Message, media: bool = False) 
     return True
 
 
-vic_text_chat_filter = filters.create(chat_convo_check) | filters.create(
+lumi_ai_text_chat_filter = filters.create(chat_convo_check) | filters.create(
     private_convo_check
 )
 
 
-@bot.on_message(vic_text_chat_filter, group=2)
+@bot.on_message(lumi_ai_text_chat_filter, group=2)
 async def text_query(bot: BOT, message: Message | Msg):
     message = Message.parse(message)
     if message.text.startswith("/ask") or message.text.startswith("/web_ask"):

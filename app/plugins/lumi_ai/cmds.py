@@ -4,7 +4,7 @@ from pyrogram import filters
 from pyrogram.types import Message as Msg
 
 from app import BOT, Config, Message, bot
-from app.plugins.VIC.text_query import text_query
+from app.plugins.lumi_ai.text_query import text_query
 
 HELP_TEXT = """Hello. I am Lumi, a friendly AI sidekick with a human-like personality.
 

@@ -4,7 +4,7 @@ import shutil
 from pyrogram.enums import ChatType
 
 from app import BOT, Config, Message, bot
-from app.plugins.VIC.db import update_db
+from app.plugins.lumi_ai.db import update_db
 
 
 async def init_task() -> None:

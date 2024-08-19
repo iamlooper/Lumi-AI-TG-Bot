@@ -1,3 +1,4 @@
+import ssl
 from async_lru import alru_cache
 from pyrogram.enums import ParseMode
 from pyrogram.raw.functions.messages import SetTyping
@@ -65,10 +66,14 @@ async def get_peer(chat_id: int):
 async def send_response(message: Message, query: str, url: str, data: str | None = None):
     peer = await get_peer(message.chat.id)
     await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
+    ssl_context = ssl.create_default_context()
+    ssl_context.check_hostname = False
+    ssl_context.verify_mode = ssl.CERT_NONE
     async with aio.session.post(
         url=url,
         headers={"Content-Type": "application/json"},
-        data=data
+        data=data,
+        ssl=ssl_context
     ) as ses:
         await bot.invoke(SetTyping(peer=peer, action=SendMessageTypingAction()))
         response_json = await ses.json()
