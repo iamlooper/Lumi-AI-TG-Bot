@@ -9,46 +9,21 @@ from app.utils.aiohttp_tools import aio
 
 def add_response_json_to_convo(message: Message, query: str, response_json: dict | None = None):
     if response_json is not None:
-        if "web_search_results" in response_json:
-            Config.CONVO_DICT[message.unique_chat_user_id].extend(
-                [
-                    {
-                        "role": "user",
-                        "content": "."
-                    },
-                    {
-                        "role": "ai",
-                        "content": response_json["web_search_results"]
-                    }
-                ]
-            )
+        convo_entry = [
+            {
+                "role": "user",
+                "content": query
+            },
+            {
+                "role": "ai",
+                "content": response_json["response"]
+            }
+        ]
 
-        if "files_contents" in response_json:
-            Config.CONVO_DICT[message.unique_chat_user_id].extend(
-                [
-                    {
-                        "role": "user",
-                        "content": "."
-                    },
-                    {
-                        "role": "ai",
-                        "content": response_json["files_contents"]
-                    }
-                ]
-            )
+        if "files" in response_json:
+            convo_entry[0]["files"] = response_json["files"]
 
-        Config.CONVO_DICT[message.unique_chat_user_id].extend(
-            [
-                {
-                    "role": "user",
-                    "content": query
-                },
-                {
-                    "role": "ai",
-                    "content": response_json["response"]
-                }
-            ]
-        )
+        Config.CONVO_DICT[message.unique_chat_user_id].extend(convo_entry)
 
 
 def check_overflow(message: Message):

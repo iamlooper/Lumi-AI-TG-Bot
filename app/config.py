@@ -25,6 +25,8 @@ class Config:
 
     API: str = os.environ.get("LUMI_AI_API")
 
+    API_KEY: str = os.environ.get("LUMI_AI_API_KEY")
+
     BOT_NAME: str = os.environ.get("BOT_NAME", "Lumi-AI")
 
     CHATS: dict[str, list[int]] = {"PRIVATE": [], "GROUPS": []}

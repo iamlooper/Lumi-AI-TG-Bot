@@ -11,7 +11,7 @@ from app.plugins.lumi_ai.helper import check_overflow, send_response
 from app.plugins.lumi_ai.text_query import chat_convo_check, private_convo_check
 from app.utils.media_helper import MediaExts
 
-ALLOWED_EXTS = {*MediaExts.PHOTO, *MediaExts.TEXT, *MediaExts.DOCUMENT}
+ALLOWED_EXTS = {*MediaExts.PHOTO, *MediaExts.TEXT, *MediaExts.DOCUMENT, *MediaExts.AUDIO, *MediaExts.VIDEO}
 
 
 async def media_check(filters, client, message: Message) -> bool:
@@ -36,11 +36,11 @@ async def media_query(bot: BOT, message: Message | Msg):
     down_resp = await message.reply("Downloading...")
     media: list | None = await get_media_list(message)
     if not media:
-        await down_resp.edit("File size exceeds 2MB or is an unsupported file type.")
+        await down_resp.edit("File size exceeds 5MB or is an unsupported file type.")
         return
 
     history = Config.CONVO_DICT[message.unique_chat_user_id]
-    data = json.dumps({"query": query, "files": media, "history": history, "web_search": Config.WEB_SEARCH[message.unique_chat_user_id]})
+    data = json.dumps({"query": query, "files": media, "history": history, "web_search": Config.WEB_SEARCH[message.unique_chat_user_id], "sign": Config.API_KEY, "platform": "telegram"})
     await send_response(message=message, query=query, url=Config.API, data=data)
 
 
@@ -80,4 +80,4 @@ async def parse_media(message: Message) -> dict[str, str] | None:
 
 
 def check_size(media):
-    return media.file_size < 2097152
+    return media.file_size < 5242880

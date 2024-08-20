@@ -19,31 +19,48 @@ class MediaType(Enum):
 
 
 class MediaExts:
-    PHOTO = {".png", ".jpg", ".jpeg"}
-    VIDEO = {".mp4", ".mkv", ".webm"}
     GIF = {".gif"}
-    AUDIO = {".aac", ".mp3", ".opus", ".m4a", ".ogg", ".flac"}
     TEXT = {
-        ".txt",
-        ".json",
-        ".xml",
-        ".html",
-        ".css",
-        ".md",
-        ".log",
-        ".ini",
-        ".conf",
-        ".sh",
-        ".py",
-        ".js",
-        ".java",
-        ".kt",
-        ".c",
-        ".cpp",
-        ".h",
-        ".hpp",
+        ".c", ".cpp", ".cs", ".java", ".py", ".js", ".ts", ".rb", ".go", ".php", ".pl", ".swift", ".kt",
+        ".rs", ".hs", ".jl", ".lua", ".sh", ".bat", ".r", ".m", ".sql", ".xml", ".html", ".css", ".scss",
+        ".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf", ".md", ".rst", ".txt", ".adoc", ".tex",
+        ".rtf", ".csv", ".tsv", ".log", ".properties", ".env", ".config", ".prefs", ".ps1", ".vbs", ".wsh",
+        ".ahk", ".bib", ".srt", ".sub", ".vtt", ".po", ".pot", ".h", ".hpp", ".jsx", ".tsx", ".erl", ".ex",
+        ".exs", ".dart", ".groovy", ".scala", ".sc", ".clj", ".cljs", ".edn", ".coffee", ".litcoffee",
+        ".elm", ".fs", ".fsi", ".fsx", ".fsscript", ".ml", ".mli", ".nim", ".cr", ".v", ".sv", ".svh"
     }
-    DOCUMENT = {".pdf", ".docx", ".xlsx"}
+    PHOTO = {
+        ".png",
+        ".jpg",
+        ".jpeg",
+        ".webp",
+        ".heic",
+        ".heif"
+    }
+    AUDIO = {
+        ".wav",
+        ".mp3",
+        ".aiff",
+        ".aac",
+        ".ogg",
+        ".flac"
+    }
+    VIDEO = {
+        ".mp4",
+        ".mpeg",
+        ".mov",
+        ".avi",
+        ".x-flv",
+        ".mpg",
+        ".webm",
+        ".wmv",
+        ".3gpp"
+    }
+    DOCUMENT = {
+        ".pdf",
+        ".docx",
+        ".xlsx"
+    }
 
 
 def bytes_to_mb(size: int):
